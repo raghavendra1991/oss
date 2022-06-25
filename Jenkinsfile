@@ -5,6 +5,7 @@ pipeline {
     environment {
         DOCKER_HUB_REPO = "raghaduvva/flaskapp"
         DOCKERHUB_CREDENTIALS = credentials('docker-hub')
+        CONTAINER_NAME = "flaskapp"
         http_proxy = 'http://127.0.0.1:3128/'
         https_proxy = 'http://127.0.0.1:3128/'
         ftp_proxy = 'http://127.0.0.1:3128/'
@@ -19,6 +20,14 @@ pipeline {
             steps {
                 echo 'Building Docker Image'
                 sh 'docker build -t $DOCKER_HUB_REPO:$BUILD_NUMBER .'       
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+                sh 'docker stop $CONTAINER_NAME || true'
+                sh 'docker rm $CONTAINER_NAME || true'
+                sh 'docker run -td --name $CONTAINER_NAME -p 5000:5000 $DOCKER_HUB_REPO /bin/bash
             }
         }
 
