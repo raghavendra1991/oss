@@ -22,23 +22,30 @@ pipeline {
                 sh 'docker build -t $DOCKER_HUB_REPO:$BUILD_NUMBER .'       
             }
         }
+        
+        stage ('Stop & Delete Previous Containers') {
+            steps {
+                echo 'Stop & Delete Previous Containers'
+                sh 'docker stop $(docker ps -a -q) || true && docker rm $(docker ps -a -q) || true'       
+            }
+        }
+        
         stage('Create Containers') {
             steps {
                 echo 'Creating Conatiner Tesing Purpose'
-                sh 'docker run -d --name $CONTAINER_NAME$BUILD_NUMBER -p $BUILD_NUMBER:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER && docker ps'
-            }
-        }
-
-        stage ('Push Image ') {
-            steps {
-                echo 'Pushing Image'
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR  --password-stdin && docker push $DOCKER_HUB_REPO:$BUILD_NUMBER'
+                sh 'docker run -d --name $CONTAINER_NAME$BUILD_NUMBER -p 5000:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER && docker ps'
             }
         }
         stage ('Testing Container ') {
             steps {
                 echo 'Testing Container'
-                sh 'curl localhost:$BUILD_NUMBER'
+                sh 'curl localhost:5000'
+            }
+        }
+        stage ('Push Image ') {
+            steps {
+                echo 'Pushing Image'
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR  --password-stdin && docker push $DOCKER_HUB_REPO:$BUILD_NUMBER'
             }
         }
         stage ('Deleting Unused Docker Images') {
