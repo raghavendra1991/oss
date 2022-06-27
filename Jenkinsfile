@@ -5,6 +5,7 @@ pipeline {
     environment {
         DOCKER_HUB_REPO = "raghaduvva/flaskapp"
         DOCKERHUB_CREDENTIALS = credentials('docker-hub')
+        CONTAINER_NAME = "app"
         http_proxy = 'http://127.0.0.1:3128/'
         https_proxy = 'http://127.0.0.1:3128/'
         ftp_proxy = 'http://127.0.0.1:3128/'
@@ -25,7 +26,7 @@ pipeline {
             steps {
                 echo 'Creating Conatiner Tesing Purpose'
                 sh ''' docker ps '''
-                sh 'docker run -td --name $BUILD_NUMBER -p 5000:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER'
+                sh 'docker run -d --name $CONTAINER_NAME$BUILD_NUMBER -p $BUILD_NUMBER:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER'
             }
         }
 
