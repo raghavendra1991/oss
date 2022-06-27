@@ -5,7 +5,6 @@ pipeline {
     environment {
         DOCKER_HUB_REPO = "raghaduvva/flaskapp"
         DOCKERHUB_CREDENTIALS = credentials('docker-hub')
-        VERSION = "1"
         http_proxy = 'http://127.0.0.1:3128/'
         https_proxy = 'http://127.0.0.1:3128/'
         ftp_proxy = 'http://127.0.0.1:3128/'
@@ -25,7 +24,7 @@ pipeline {
         stage('Test Containers') {
             steps {
                 echo 'Creating Conatiner Tesing Purpose'
-                sh 'docker run -td --name $VESRION.BUILD_NUMBER -p 5000:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER'
+                sh 'docker run -td --name $BUILD_NUMBER -p 5000:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER'
             }
         }
 
