@@ -38,7 +38,7 @@ pipeline {
         stage ('Testing Container ') {
             steps {
                 echo 'Testing Container'
-                sh 'curl localhost:5000'
+                sh 'curl localhost:$BUILD_NUMBER'
             }
         }
     }
