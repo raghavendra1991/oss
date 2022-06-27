@@ -37,5 +37,11 @@ pipeline {
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR  --password-stdin && docker push $DOCKER_HUB_REPO:$BUILD_NUMBER'
             }
         }
+        stage ('Testing Container ') {
+            steps {
+                echo 'Testing Container'
+                sh 'curl localhost:5000'
+            }
+        }
     }
 }
