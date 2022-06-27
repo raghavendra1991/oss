@@ -41,5 +41,12 @@ pipeline {
                 sh 'curl localhost:$BUILD_NUMBER'
             }
         }
+        stage ('Deleting Unused Docker Images') {
+            steps {
+                echo 'Deleting Docker Images'
+                sh 'docker rmi -f $(docker images -a -q)'
+            }
+        }
+        
     }
 }
