@@ -22,11 +22,10 @@ pipeline {
                 sh 'docker build -t $DOCKER_HUB_REPO:$BUILD_NUMBER .'       
             }
         }
-        stage('Test Containers') {
+        stage('Create Containers') {
             steps {
                 echo 'Creating Conatiner Tesing Purpose'
-                sh ''' docker ps '''
-                sh 'docker run -d --name $CONTAINER_NAME$BUILD_NUMBER -p $BUILD_NUMBER:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER'
+                sh 'docker run -d --name $CONTAINER_NAME$BUILD_NUMBER -p $BUILD_NUMBER:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER && docker ps'
             }
         }
 
