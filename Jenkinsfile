@@ -24,6 +24,7 @@ pipeline {
         stage('Test Containers') {
             steps {
                 echo 'Creating Conatiner Tesing Purpose'
+                sh ''' docker ps '''
                 sh 'docker run -td --name $BUILD_NUMBER -p 5000:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER'
             }
         }
