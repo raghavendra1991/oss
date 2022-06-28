@@ -16,24 +16,22 @@ pipeline {
 
         /* We do not need a stage for checkout here since it is done by default when using "Pipeline script from SCM" option. */
         
+        stage ('Cleaning') {
+            steps {
+                echo 'Cleaning Local Images and Containers'
+                sh 'docker stop $(docker ps) || true && docker rm $(docker ps) || true && docker rmi -f $(docker images) || true'     
+            }
+        }
         stage ('Build Docker Image') {
             steps {
                 echo 'Building Docker Image'
                 sh 'docker build -t $DOCKER_HUB_REPO:$BUILD_NUMBER .'       
             }
-        }
-        
-        stage ('Stop & Delete Previous Containers') {
-            steps {
-                echo 'Stop & Delete Previous Containers'
-                sh 'docker stop $(docker ps -a -q) || true && docker rm $(docker ps -a -q) || true'       
-            }
-        }
-        
+        }       
         stage('Create Containers') {
             steps {
                 echo 'Creating Conatiner Tesing Purpose'
-                sh 'docker run -d --name $CONTAINER_NAME$BUILD_NUMBER -p 5000:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER && docker ps'
+                sh 'docker run -d --name $CONTAINER_NAME -p 5000:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER && docker ps'
             }
         }
         stage ('Testing Container ') {
@@ -48,12 +46,5 @@ pipeline {
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR  --password-stdin && docker push $DOCKER_HUB_REPO:$BUILD_NUMBER'
             }
         }
-        stage ('Deleting Unused Docker Images') {
-            steps {
-                echo 'Deleting Docker Images'
-                sh 'docker rmi -f $(docker images -a -q) || true'
-            }
-        }
-        
     }
 }
