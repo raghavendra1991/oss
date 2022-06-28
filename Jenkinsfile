@@ -34,13 +34,13 @@ pipeline {
                 sh 'docker run -d --name $CONTAINER_NAME -p 5000:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER && docker ps'
             }
         }
-        stage ('Testing Container ') {
+        stage ('Testing Container') {
             steps {
                 echo 'Testing Container'
                 sh 'wget localhost:5000'
             }
         }
-        stage ('Push Image ') {
+        stage ('Push Image') {
             steps {
                 echo 'Pushing Image'
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR  --password-stdin && docker push $DOCKER_HUB_REPO:$BUILD_NUMBER'
