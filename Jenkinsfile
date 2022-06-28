@@ -19,7 +19,7 @@ pipeline {
         stage ('Cleaning') {
             steps {
                 echo 'Cleaning Local Images and Containers'
-                sh 'docker stop $(docker ps) || true && docker rm $(docker ps) || true && docker rmi -f $(docker images) || true'     
+                sh 'docker stop $(docker ps -a -q) || true && docker rm $(docker ps -a -q) || true && docker rmi -f $(docker images  -a -q) || true'     
             }
         }
         stage ('Build Docker Image') {
@@ -31,7 +31,7 @@ pipeline {
         stage('Create Containers') {
             steps {
                 echo 'Creating Conatiner Tesing Purpose'
-                sh 'docker run -d --name $CONTAINER_NAME$BUILD_NUMBER -p 5000:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER && docker ps'
+                sh 'docker run -d --name $CONTAINER_NAME -p 5000:5000 --restart unless-stopped $DOCKER_HUB_REPO:$BUILD_NUMBER && docker ps'
             }
         }
         stage ('Testing Container ') {
