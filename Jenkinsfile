@@ -37,7 +37,7 @@ pipeline {
         stage ('Testing Container') {
             steps {
                 echo 'Testing Container'
-                sh 'wget localhost:5000'
+                sh 'wget localhost:5000 && ./script.sh' 
             }
         }
         stage ('Push Image') {
