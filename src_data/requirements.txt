@@ -1,2 +1,2 @@
-Flask
-Redis
+Flask==1.0.2
+Redis==none
